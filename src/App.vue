@@ -55,6 +55,7 @@ export default {
       this.dir = 'up';
       this.jumb = true;
       this.varr = !this.varr;
+      setTimeout(() => (this.imgx = 0), 500);
     },
     randomNumbwr(to) {
       return Math.floor(Math.random() * to);
