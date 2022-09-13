@@ -89,10 +89,9 @@ export default {
     movementFallsRight() {
       if (this.stepNumber >= 1) {
         if (this.imgy >= this.steps[this.stepNumber - 1].left + 300) {
-          this.imgx = this.imgx - 100;
+          this.imgx -= 100;
           this.stepNumber--;
           if (this.imgy >= this.steps[this.stepNumber - 2].left + 300) {
-            console.log('this.imgx', this.imgx);
             this.imgx = 0;
             this.lose = true;
           }
@@ -102,8 +101,12 @@ export default {
     movementFallsLeft() {
       if (this.stepNumber >= 1) {
         if (this.imgy + 60 < this.steps[this.stepNumber - 1].left) {
-          this.imgx = 0;
-          this.lose = true;
+          this.imgx -= 100;
+          this.stepNumber--;
+          if (this.imgy + 60 < this.steps[this.stepNumber - 2].left) {
+            this.imgx = 0;
+            this.lose = true;
+          }
         }
       }
     },
