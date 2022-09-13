@@ -41,6 +41,7 @@ export default {
   methods: {
     handleRigth() {
       this.imgy += 25;
+      this.movementFallsRight();
       this.varr = !this.varr;
       this.dir = 'r';
       this.jumb = true;
@@ -48,6 +49,7 @@ export default {
     handleLeft() {
       this.dir = 'l';
       this.imgy -= 25;
+      this.movementFallsLeft();
       this.varr = !this.varr;
       this.jumb = true;
     },
@@ -56,8 +58,6 @@ export default {
       this.dir = 'up';
       this.jumb = true;
       this.varr = !this.varr;
-      //console.log('this.steps[4].top &&', this.steps[0].bottom);
-      //console.log('this.imgx', this.imgx);
       setTimeout(() => {
         if (
           this.imgx > this.steps[this.stepNumber].bottom &&
@@ -73,6 +73,21 @@ export default {
     },
     randomNumbwr(to) {
       return Math.floor(Math.random() * to);
+    },
+    movementFallsRight() {
+      if (this.stepNumber >= 1) {
+        if (this.imgy >= this.steps[this.stepNumber - 1].left + 300) {
+          console.log('falls');
+          this.imgx = 0;
+        }
+      }
+    },
+    movementFallsLeft() {
+      if (this.stepNumber >= 1) {
+        if (this.imgy + 60 < this.steps[this.stepNumber - 1].left) {
+          this.imgx = 0;
+        }
+      }
     },
   },
   created() {
@@ -108,7 +123,6 @@ export default {
     //     }, 200);
     //   }, 20);
   },
-  components: {},
 };
 </script>
 
