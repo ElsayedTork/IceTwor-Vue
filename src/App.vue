@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <section class="twor" v-if="lose == false">
+    <section class="twor" v-if="lose == false && stepNumber < 4">
       <div v-for="step in steps" :key="step.id">
         <div
           class="twor__step"
@@ -22,7 +22,7 @@
       </div>
     </section>
     <section class="tower-lose" v-else>
-      <h2>You Lose</h2>
+      <h2>{{ messageEndGame }}</h2>
     </section>
     <h2 class="score">Your Score Is : {{ stepNumber }}</h2>
   </div>
@@ -42,6 +42,17 @@ export default {
       stepNumber: 0,
       lose: false,
     };
+  },
+  computed: {
+    messageEndGame() {
+      if (this.lose == true) {
+        return 'You Lose The Game';
+      } else if (this.stepNumber >= 4) {
+        return 'You Win The Game';
+      } else {
+        return '';
+      }
+    },
   },
   methods: {
     handleRigth() {
@@ -63,13 +74,6 @@ export default {
       this.dir = 'up';
       this.jumb = true;
       this.varr = !this.varr;
-      // if (this.stepNumber % 2 == 0 && this.stepNumber != 0) {
-      //   console.log('%3');
-      //   this.steps = this.steps.map((step) => [
-      //     ...step,
-      //   ]);
-      // }
-
       setTimeout(() => {
         if (
           this.imgx > this.steps[this.stepNumber].bottom &&
@@ -91,7 +95,7 @@ export default {
         if (this.imgy >= this.steps[this.stepNumber - 1].left + 300) {
           this.imgx -= 100;
           this.stepNumber--;
-          if (this.imgy >= this.steps[this.stepNumber - 2].left + 300) {
+          if (this.imgy >= this.steps[this.stepNumber - 1].left + 300) {
             this.imgx = 0;
             this.lose = true;
           }
@@ -103,9 +107,13 @@ export default {
         if (this.imgy + 60 < this.steps[this.stepNumber - 1].left) {
           this.imgx -= 100;
           this.stepNumber--;
-          if (this.imgy + 60 < this.steps[this.stepNumber - 2].left) {
-            this.imgx = 0;
-            this.lose = true;
+          if (this.imgy + 60 < this.steps[this.stepNumber - 1].left) {
+            this.imgx -= 100;
+            this.stepNumber--;
+            if (this.imgy + 60 < this.steps[this.stepNumber - 1].left) {
+              this.imgx = 0;
+              this.lose = true;
+            }
           }
         }
       }
@@ -134,16 +142,17 @@ export default {
   },
   mounted() {
     this.$refs.div.focus();
-    if (this.stepNumber > 0) {
+    setTimeout(() => {
       setTimeout(() => {
         setInterval(() => {
           this.steps = this.steps.map((step) => ({
             ...step,
             bottom: step.bottom - 5,
           }));
+          this.imgx -= 5;
         }, 200);
       }, 20);
-    }
+    }, 2000);
   },
 };
 </script>
