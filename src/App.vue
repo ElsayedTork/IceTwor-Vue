@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <section class="twor">
+    <section class="twor" v-if="lose == false">
       <div v-for="step in steps" :key="step.id">
         <div
           class="twor__step"
@@ -21,6 +21,10 @@
         />
       </div>
     </section>
+    <section class="tower-lose" v-else>
+      <h2>You Lose</h2>
+    </section>
+    <h2 class="score">Your Score Is : {{ stepNumber }}</h2>
   </div>
 </template>
 
@@ -36,6 +40,7 @@ export default {
       count: 0,
       dir: '',
       stepNumber: 0,
+      lose: false,
     };
   },
   methods: {
@@ -58,6 +63,13 @@ export default {
       this.dir = 'up';
       this.jumb = true;
       this.varr = !this.varr;
+      // if (this.stepNumber % 2 == 0 && this.stepNumber != 0) {
+      //   console.log('%3');
+      //   this.steps = this.steps.map((step) => [
+      //     ...step,
+      //   ]);
+      // }
+
       setTimeout(() => {
         if (
           this.imgx > this.steps[this.stepNumber].bottom &&
@@ -77,8 +89,13 @@ export default {
     movementFallsRight() {
       if (this.stepNumber >= 1) {
         if (this.imgy >= this.steps[this.stepNumber - 1].left + 300) {
-          console.log('falls');
-          this.imgx = 0;
+          this.imgx = this.imgx - 100;
+          this.stepNumber--;
+          if (this.imgy >= this.steps[this.stepNumber - 2].left + 300) {
+            console.log('this.imgx', this.imgx);
+            this.imgx = 0;
+            this.lose = true;
+          }
         }
       }
     },
@@ -86,13 +103,13 @@ export default {
       if (this.stepNumber >= 1) {
         if (this.imgy + 60 < this.steps[this.stepNumber - 1].left) {
           this.imgx = 0;
+          this.lose = true;
         }
       }
     },
   },
   created() {
     for (let x = 0; x <= 20; x++) {
-      this.count -= 220;
       this.steps.push({
         id: this.randomNumbwr(1000),
         bottom: this.count,
@@ -103,7 +120,7 @@ export default {
       { id: 1, bottom: 100, left: 200 },
       { id: 2, bottom: 200, left: 350 },
       { id: 3, bottom: 300, left: 600 },
-      { id: 4, bottom: 400, left: 870 },
+      { id: 4, bottom: 400, left: 500 },
       { id: 5, bottom: 500, left: 400 },
       { id: 6, bottom: 600, left: 220 },
       { id: 7, bottom: 700, left: 150 },
@@ -114,14 +131,16 @@ export default {
   },
   mounted() {
     this.$refs.div.focus();
-    //   setTimeout(() => {
-    //     setInterval(() => {
-    //       this.steps = this.steps.map((step) => ({
-    //         ...step,
-    //         top: step.top + 5,
-    //       }));
-    //     }, 200);
-    //   }, 20);
+    if (this.stepNumber > 0) {
+      setTimeout(() => {
+        setInterval(() => {
+          this.steps = this.steps.map((step) => ({
+            ...step,
+            bottom: step.bottom - 5,
+          }));
+        }, 200);
+      }, 20);
+    }
   },
 };
 </script>
@@ -163,5 +182,19 @@ html {
   .jumb-up {
     rotate: z 360deg;
   }
+}
+.tower-lose {
+  background-color: #000;
+  color: orange;
+  padding: 30px 100px;
+  font-size: 45px;
+  text-align: center;
+}
+.score {
+  position: absolute;
+  top: 10px;
+  right: 200px;
+  color: #fff;
+  font-size: 20px;
 }
 </style>
