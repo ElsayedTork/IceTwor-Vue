@@ -147,9 +147,7 @@ export default {
             bottom: step.bottom - 5,
           }));
           this.imgx -= 5;
-          if (this.imgx <= 0) {
-            this.lose = true;
-          }
+          this.imgx <= 0 ? (this.lose = true) : this.imgx;
         }, 200);
       }, 20);
     }, 2000);
